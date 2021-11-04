@@ -1,0 +1,1 @@
+docker create volume $1

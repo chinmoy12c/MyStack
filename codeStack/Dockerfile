@@ -45,6 +45,10 @@ RUN apt-get install -y build-essential
 RUN apt-get install -y default-jre
 RUN apt-get install -y default-jdk
 
+RUN apt-get update
+RUN apt-get install -y net-tools
+RUN apt-get install -y ssh
+
 RUN mkdir /root/codedata
 RUN mkdir /root/mydata
-CMD [ "/usr/bin/code","--user-data-dir=/root/codedata","--verbose","--no-sandbox"]
+CMD [ "/usr/bin/bash"]
