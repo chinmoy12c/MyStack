@@ -1,1 +1,0 @@
-exports.SECRET_KEY = 'mysecretkey';

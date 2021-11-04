@@ -30,6 +30,10 @@ app.get('/register', auth.checkAdmin, (req, res) => {
    res.render('register');
 });
 
+app.post('/registerUser', auth.checkAdmin, (req, res) => {
+   auth.registerUser(req, res);
+});
+
 var server = app.listen(5000, function () {
    var host = server.address().address;
    var port = server.address().port;
