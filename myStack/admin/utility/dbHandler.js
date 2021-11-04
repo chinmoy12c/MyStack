@@ -1,6 +1,8 @@
 const db = require('mysql');
 const process = require('child_process');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+
 const serverConstants = require('./serverConstants.js');
 
 const connection = db.createConnection({
@@ -48,5 +50,31 @@ exports.registerUserDetails = (req, res, email, password) => {
                 });
             });
         }
+    });
+};
+
+exports.checkLoginDetails = (req, res, email, password) => {
+    password = crypto.createHash('md5').update(password+serverConstants.HASH_SECRET_KEY).digest('hex');
+    connection.query('SELECT * FROM users WHERE email = ? AND password = ?',
+    [email, password],
+    (err, result, fields) => {
+        if (err) {
+            res.render('errorPage', {'errorMessage' : 'Login failed! Please try again.'});
+            return;
+        }
+
+        if (result.length == 0) {
+            res.render('errorPage', {'errorMessage' : 'Username or Password wrong!'});
+            return;
+        }
+
+        const accessToken = jwt.sign({
+            email: result[0].email,
+            role: result[0].type,
+            caddyPass: result[0].caddyPass,
+            volume: result[0].volume
+        }, serverConstants.CADDY_SECRET_KEY);
+        res.cookie('accessToken', accessToken);
+        res.redirect('/');
     });
 };

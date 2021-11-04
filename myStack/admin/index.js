@@ -14,13 +14,9 @@ app.use(multer().array());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.get('/', auth.checkAuth, (req, res) => {
-   res.render('index');
-});
+app.get('/', auth.checkAuth, (req, res) => {});
 
-app.get('/login', (req, res) => {
-   res.render('login');
-});
+app.get('/login', auth.checkAuth, (req, res) => {});
 
 app.post('/loginUser', (req, res) => {
    auth.loginUser(req, res);

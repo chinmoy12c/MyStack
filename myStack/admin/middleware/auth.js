@@ -6,9 +6,9 @@ const serverConstants = require("../utility/serverConstants.js");
 
 exports.checkAuth = (req, res, next) => {
     if (req.cookies.accessToken != undefined)
-        next();
+        res.render('index');
     else
-        res.redirect('/login');
+        res.render('login');
 };
 
 exports.checkAdmin = (req, res, next) => {
@@ -29,10 +29,7 @@ exports.loginUser = (req, res) => {
     const password = req.body.password;
     if (email == '') res.render('errorPage', {'errorMessage': 'Username required!'});
     else if (password == '') res.render('errorPage', {'errorMessage': 'Password required!'});
-
-    const accessToken = jwt.sign({email: email, role: 'admin'}, serverConstants.CADDY_SECRET_KEY);
-    res.cookie('accessToken', accessToken);
-    res.redirect('/');
+    dbHandler.checkLoginDetails(req, res, email, password);
 };
 
 exports.registerUser = (req, res) => {
