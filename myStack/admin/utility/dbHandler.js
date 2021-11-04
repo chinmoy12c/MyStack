@@ -36,8 +36,8 @@ exports.registerUserDetails = (req, res, email, password) => {
                 }
                 const caddyPass = stdout.split('\n')[0].trim();
                 password = crypto.createHash('md5').update(password+serverConstants.HASH_SECRET_KEY).digest('hex');
-                connection.query('INSERT INTO users (email, password, caddyPass, volume) VALUES (?, ?, ?, ?)',
-                [email, password, caddyPass, volume],
+                connection.query('INSERT INTO users (email, password, caddyPass, volume, type) VALUES (?, ?, ?, ?, ?)',
+                [email, password, caddyPass, volume, 'user'],
                 (error, result, fields) => {
                     if (error) {
                         res.render('errorPage', {'errorMessage' : 'Registration failed! Please try again.'});
