@@ -1,4 +1,3 @@
-const url = require('url');
 const process = require('child_process');
 const crypto = require('crypto');
 
@@ -24,7 +23,7 @@ exports.runContainer = (req, res, containerName) => {
     process.exec(cmd,
     (err, stdout, stderr) => {
         if (err || stderr) {
-            res.render('errorPage', {'errorMessage': err ? err : stderr});
+            res.render('errorPage', {'errorMessage': 'Failed to launch instance! Please try again.'});
             return;
         }
         const port = stdout.trim();
@@ -35,7 +34,7 @@ exports.runContainer = (req, res, containerName) => {
         process.exec(cmd,
         (err, stdout, stderr) => {
             if (err || stderr) {
-                res.render('errorPage', {'errorMessage': err ? err : stderr});
+                res.render('errorPage', {'errorMessage': 'Failed to launch instance! Please try again.'});
                 console.log(err ? err : stderr);
                 return;
             }
@@ -44,12 +43,12 @@ exports.runContainer = (req, res, containerName) => {
             process.exec(cmd,
             (err, stdout, stderr) => {
                 if (err || stderr) {
-                    res.render('errorPage', {'errorMessage': err ? err : stderr});
+                    res.render('errorPage', {'errorMessage': 'Failed to launch instance! Please try again.'});
                     console.log(err ? err : stderr);
                     return;
                 }
                 console.log(stdout);
-                res.send("Started");
+                res.redirect(`http://${req.get('host').split(':')[0]}:${port}`);
             });
         });
     });
