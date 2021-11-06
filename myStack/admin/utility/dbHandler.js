@@ -27,8 +27,8 @@ exports.registerUserDetails = (req, res, email, password) => {
         }
         else {
             const volume = crypto.randomBytes(16).toString("hex");
-            const cmd = 'docker exec '+serverConstants.caddyPassGenContainer+' caddy hash-password -plaintext "'+password+'" && \ ' + 
-                        'docker volume create '+volume;
+            const cmd = `${serverConstants.scriptsDir}/createCaddyHash.sh -c ${serverConstants.caddyPassGenContainer} -p ${password} && \ ` +
+                        `${serverConstants.scriptsDir}/createVolume.sh ${volume}`;
             process.exec(cmd,
             (err, stdout, stderr) => {
                 if (err || stderr) {
@@ -46,7 +46,7 @@ exports.registerUserDetails = (req, res, email, password) => {
                         console.log(err ? err : stderr);
                         return;
                     }
-                    res.redirect('/');
+                    res.send('Started!');
                 });
             });
         }
@@ -73,7 +73,7 @@ exports.checkLoginDetails = (req, res, email, password) => {
             role: result[0].type,
             caddyPass: result[0].caddyPass,
             volume: result[0].volume
-        }, serverConstants.CADDY_SECRET_KEY);
+        }, serverConstants.JWT_SECRET_KEY);
         res.cookie('accessToken', accessToken);
         res.redirect('/');
     });

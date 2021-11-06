@@ -1,9 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-beta/css/bootstrap.min.css" />
     <title>Home</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,500&amp;subset=latin-ext" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
+
+<style>
+    html {
+        font-size: 14px;
+    }
+
+    .container {
+        font-size: 14px;
+        color: #666666;
+        font-family: "Open Sans";
+    }
+</style>
+
 <body>
-    <p>Choose your stack</p>
+    <div class="container">
+        <p class="banner">Choose your stack</p>
+        <div class="line"></div>
+        <div class="row pt-5 m-auto">
+            <div class="col-md-6 col-lg-4 pb-3">
+                <div class="card card-custom bg-white border-white border-0">
+                    <div class="card-custom-img" style="background-image: url(./img/techstack.png);"></div>
+                    <div class="card-custom-avatar">
+                        <img class="img-fluid" src="https://www.itzgeek.com/wp-content/uploads/2014/03/Tomcat-Logo.jpg"
+                            alt="Avatar" />
+                    </div>
+                    <div class="card-body" style="overflow-y: auto">
+                        <h4 class="card-title">Tomstack</h4>
+                        <p class="card-text">Card has minimum height set but will expand if more space is needed for
+                            card body content. You can use Bootstrap <a
+                                href="https://getbootstrap.com/docs/4.0/components/card/#card-decks"
+                                target="_blank">card-decks</a> to align multiple cards nicely in a row.</p>
+                    </div>
+                    <div class="card-footer" style="background: inherit; border-color: inherit;">
+                        <a href="#" class="tag">Tomcat</a>
+                        <a href="#" class="tag">MySql</a>
+                        <br>
+                        <a href="/launchStack?stack=TOM" class="btn btn-primary" style="display: block;">Launch</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

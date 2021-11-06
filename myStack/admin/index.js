@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 
 const auth = require('./middleware/auth.js');
+const authUtil = require('./utility/authUtil.js');
+const instanceHandler = require('./utility/instanceHandler');
 
 const app = express();
 
@@ -14,12 +16,16 @@ app.use(multer().array());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.get('/', auth.checkAuth, (req, res) => {});
+app.get('/', auth.checkAuth, (req, res) => {
+   res.render('index');
+});
 
-app.get('/login', auth.checkAuth, (req, res) => {});
+app.get('/login', auth.checkAlreadyLogged, (req, res) => {
+   res.render('login');
+});
 
-app.post('/loginUser', (req, res) => {
-   auth.loginUser(req, res);
+app.post('/loginUser', auth.checkAlreadyLogged, (req, res) => {
+   authUtil.loginUser(req, res);
 });
 
 app.get('/register', auth.checkAdmin, (req, res) => {
@@ -27,7 +33,14 @@ app.get('/register', auth.checkAdmin, (req, res) => {
 });
 
 app.post('/registerUser', auth.checkAdmin, (req, res) => {
-   auth.registerUser(req, res);
+   authUtil.registerUser(req, res);
+});
+
+app.get('/launchStack', auth.checkAuth, auth.confirmToken, (req, res) => {
+   const stack = req.query.stack;
+   const containerName = instanceHandler.resolveContainer(stack);
+   if (containerName == 'NOT_FOUND') res.render('errorPage', {'errorMessage': 'Invalid container!'});
+   instanceHandler.runContainer(req, res, containerName);
 });
 
 var server = app.listen(5000, function () {
