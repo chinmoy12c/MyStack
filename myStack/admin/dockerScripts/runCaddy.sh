@@ -11,4 +11,4 @@ do
     esac
 done
 
-docker run --detach --restart=always --volume=$volume:/home/student --net=mystack --env=APP_USERNAME=$username --env=APP_PASSWORD_HASH=$passwd --env=ATTACH_TO=$attachTo --publish=$port:8080 caddy
+docker run --detach --restart=always --volume=$volume:/home/student/studentData --net=mystack --env=APP_USERNAME=$username --env=APP_PASSWORD_HASH=$passwd --env=ATTACH_TO=$attachTo --publish=$port:8080 caddy

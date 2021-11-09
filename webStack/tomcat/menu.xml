@@ -16,5 +16,10 @@
                 <execute>/usr/bin/bash mysql</execute>
             </action>
         </item>
+        <item label="File Explorer">
+            <action name="Execute">
+                <execute>/usr/bin/nautilus /home/student/</execute>
+            </action>
+        </item>
     </menu>
 </openbox_menu>

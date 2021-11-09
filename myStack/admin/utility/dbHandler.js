@@ -46,7 +46,7 @@ exports.registerUserDetails = (req, res, email, password) => {
                         console.log(err ? err : stderr);
                         return;
                     }
-                    res.send('Started!');
+                    res.send('Registered!');
                 });
             });
         }

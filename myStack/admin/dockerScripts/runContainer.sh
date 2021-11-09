@@ -9,4 +9,4 @@ do
     esac
 done
 
-docker run --detach --volume=$volume:/home/student --net=mystack --name=$tag $container
+docker run --detach --volume=$volume:/home/student/studentData --net=mystack --name=$tag $container
