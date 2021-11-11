@@ -100,6 +100,6 @@ exports.recordInstance = (req, res, userData, caddyName, containerTag, container
 
 exports.getInstances = async (req, res) => {
     const userData = authUtil.getUserData(req, res);
-    const instances = await waitQuery('SELECT * FROM instances WHERE user = 1');
+    const instances = await waitQuery('SELECT * FROM instances WHERE user = ?', [userData.id]);
     return instances;
 }
