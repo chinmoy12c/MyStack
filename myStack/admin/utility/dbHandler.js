@@ -2,8 +2,10 @@ const db = require('mysql');
 const process = require('child_process');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const util = require('util');
 
 const serverConstants = require('./serverConstants.js');
+const authUtil = require('./authUtil.js');
 
 const connection = db.createConnection({
     host: serverConstants.dbHost,
@@ -11,6 +13,8 @@ const connection = db.createConnection({
     password: serverConstants.dbPassword,
     database: serverConstants.database
 });
+
+const waitQuery = util.promisify(connection.query).bind(connection);
 
 exports.registerUserDetails = (req, res, email, password) => {
     connection.query('SELECT email FROM users WHERE email = ?',
@@ -60,17 +64,20 @@ exports.checkLoginDetails = (req, res, email, password) => {
     (err, result, fields) => {
         if (err) {
             res.render('errorPage', {'errorMessage' : 'Login failed! Please try again.'});
+            console.log(err);
             return;
         }
 
         if (result.length == 0) {
             res.render('errorPage', {'errorMessage' : 'Username or Password wrong!'});
+            console.log(err);
             return;
         }
 
         const accessToken = jwt.sign({
             email: result[0].email,
             role: result[0].type,
+            id: result[0].id,
             caddyPass: result[0].caddyPass,
             volume: result[0].volume
         }, serverConstants.JWT_SECRET_KEY);
@@ -78,3 +85,21 @@ exports.checkLoginDetails = (req, res, email, password) => {
         res.redirect('/');
     });
 };
+
+exports.recordInstance = (req, res, userData, caddyName, containerTag, containerName) => {
+    connection.query('INSERT INTO instances (user, caddyContainerId, stackContainerId, stackName) VALUES (?, ?, ?, ?)',
+    [userData.id, caddyName, containerTag, containerName],
+    (err, result, fields) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.log("Recorded!");
+    });
+};
+
+exports.getInstances = async (req, res) => {
+    const userData = authUtil.getUserData(req, res);
+    const instances = await waitQuery('SELECT * FROM instances WHERE user = 1');
+    return instances;
+}

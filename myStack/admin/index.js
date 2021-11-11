@@ -6,6 +6,7 @@ const multer = require('multer');
 const auth = require('./middleware/auth.js');
 const authUtil = require('./utility/authUtil.js');
 const instanceHandler = require('./utility/instanceHandler');
+const dbHandler = require('./utility/dbHandler.js');
 
 const app = express();
 
@@ -16,8 +17,13 @@ app.use(multer().array());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.get('/', auth.checkAuth, (req, res) => {
-   res.render('index');
+app.get('/', auth.checkAuth, async (req, res) => {
+   const instances = await dbHandler.getInstances(req, res);
+   instances.forEach(instance => {
+      instance.icon = instanceHandler.resolveStackIcon(instance.stackName);
+      console.log(instanceHandler.resolveStackIcon(instance.stackName));
+   });
+   res.render('index', {instances : instances});
 });
 
 app.get('/login', auth.checkAlreadyLogged, (req, res) => {

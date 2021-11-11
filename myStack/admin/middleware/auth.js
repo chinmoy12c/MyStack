@@ -6,14 +6,14 @@ const serverConstants = require("../utility/serverConstants.js");
 
 exports.checkAuth = (req, res, next) => {
     if (req.cookies.accessToken == undefined)
-        res.render('login');
+        res.redirect('/login');
     else
         next();
 };
 
 exports.checkAlreadyLogged = (req, res, next) => {
     if (req.cookies.accessToken != undefined)
-        res.render('index');
+        res.redirect('/');
     else
         next();
 };
