@@ -6,3 +6,4 @@ exports.dbPassword = 'mysqlpassword';
 exports.database = 'mystack';
 exports.caddyPassGenContainer = 'caddyPassGen';
 exports.scriptsDir = './dockerScripts';
+exports.instanceLimit = 3;

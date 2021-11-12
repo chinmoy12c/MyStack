@@ -102,4 +102,4 @@ exports.getInstances = async (req, res) => {
     const userData = authUtil.getUserData(req, res);
     const instances = await waitQuery('SELECT * FROM instances WHERE user = ?', [userData.id]);
     return instances;
-}
+};

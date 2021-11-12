@@ -29,7 +29,12 @@ exports.resolveStackIcon = (stack) => {
     return stackIcon;
 };
 
-exports.runContainer = (req, res, containerName) => {
+exports.runContainer = async (req, res, containerName) => {
+    const instances = await dbHandler.getInstances(req, res);
+    if (instances.length >= serverConstants.instanceLimit) {
+        res.render('errorPage', {'errorMessage': 'Maximum instance limit reached! Please close your instances.'});
+        return;
+    }
     const userData = authUtil.getUserData(req, res);
     var cmd = `${serverConstants.scriptsDir}/getFreePort.py`;
     process.exec(cmd,
