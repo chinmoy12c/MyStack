@@ -86,9 +86,9 @@ exports.checkLoginDetails = (req, res, email, password) => {
     });
 };
 
-exports.recordInstance = (req, res, userData, caddyName, containerTag, containerName) => {
-    connection.query('INSERT INTO instances (user, caddyContainerId, stackContainerId, stackName) VALUES (?, ?, ?, ?)',
-    [userData.id, caddyName, containerTag, containerName],
+exports.recordInstance = (req, res, userData, caddyName, containerTag, containerName, port) => {
+    connection.query('INSERT INTO instances (user, caddyContainerId, stackContainerId, stackName, port) VALUES (?, ?, ?, ?, ?)',
+    [userData.id, caddyName, containerTag, containerName, port],
     (err, result, fields) => {
         if (err) {
             console.log(err);
@@ -102,4 +102,13 @@ exports.getInstances = async (req, res) => {
     const userData = authUtil.getUserData(req, res);
     const instances = await waitQuery('SELECT * FROM instances WHERE user = ?', [userData.id]);
     return instances;
+};
+
+exports.deleteInstance = async (req, res, instanceId) => {
+    const userData = authUtil.getUserData(req, res);
+    const result = await waitQuery('SELECT * from instances WHERE id = ? AND user = ?', [instanceId, userData.id]);
+    if (result.length == 0)
+        return null;
+    connection.query('DELETE FROM instances WHERE id = ? AND user = ?', [instanceId, userData.id]);
+    return result[0];
 };

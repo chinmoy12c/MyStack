@@ -49,9 +49,13 @@ app.get('/launchStack', auth.checkAuth, auth.confirmToken, (req, res) => {
    instanceHandler.runContainer(req, res, containerName);
 });
 
-var server = app.listen(5000, function () {
-   var host = server.address().address;
-   var port = server.address().port;
-
-   console.log("Example app listening at http://%s:%s", host, port);
+app.post('/stopContainer', auth.checkAuth, auth.confirmToken, async (req, res) => {
+   const instanceId = parseInt(req.body.instanceId);
+   if (isNaN(instanceId)) res.end();
+   const instance = await dbHandler.deleteInstance(req, res, instanceId);
+   if (instance == null) res.end();
+   instanceHandler.stopContainer(req, res, instance);
+   res.end();
 });
+
+const server = app.listen(5000);

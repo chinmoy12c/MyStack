@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const authUtil = require('./authUtil.js');
 const serverConstants = require('./serverConstants.js');
 const dbHandler = require('./dbHandler.js');
+const { stdout, stderr } = require('process');
 
 exports.resolveContainer = (stack) => {
     var containerName;
@@ -65,10 +66,18 @@ exports.runContainer = async (req, res, containerName) => {
                     console.log(err ? err : stderr);
                     return;
                 }
-                dbHandler.recordInstance(req, res, userData, caddyName, containerTag, containerName);
+                dbHandler.recordInstance(req, res, userData, caddyName, containerTag, containerName, port);
                 console.log(caddyName);
                 res.redirect(`http://${req.get('host').split(':')[0]}:${port}`);
             });
         });
+    });
+};
+
+exports.stopContainer = (req, res, instance) => {
+    cmd = `${serverConstants.scriptsDir}/stopContainer.sh -i ${instance.stackContainerId} -c ${instance.caddyContainerId}`;
+    process.exec(cmd,
+    (err, stdout, stderr) => {
+        console.log(stderr);
     });
 };
