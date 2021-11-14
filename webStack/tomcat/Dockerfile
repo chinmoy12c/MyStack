@@ -14,11 +14,8 @@ RUN apt-get update -y && \
     mkdir -p /usr/share/desktop-directories
 
 RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends lxterminal nano wget openssh-client rsync ca-certificates xdg-utils htop tar xzip gzip bzip2 zip unzip wget sudo nautilus && \
-    rm -rf /var/lib/apt/lists
-
-RUN apt-get update -y && \
-    apt-get install -y --no-install-recommends firefox && \
+    apt-get install -y --no-install-recommends lxterminal nano wget openssh-client rsync ca-certificates xdg-utils htop tar xzip gzip \
+    bzip2 zip unzip wget sudo gedit nautilus libcurl3-gnutls libcurl3-nss libcurl4 fonts-liberation && \
     rm -rf /var/lib/apt/lists
 
 # java
@@ -26,8 +23,8 @@ RUN apt-get update -y && \
     apt-get install -y --no-install-recommends default-jre default-jdk && \
     rm -rf /var/lib/apt/lists
 
-RUN groupadd --gid 1000 app && \
-    useradd --home-dir /home/student/ --shell /bin/bash --uid 1000 --gid 1000 app && \
+RUN groupadd --gid 1000 student && \
+    useradd --home-dir /home/student/ --shell /bin/bash --uid 1000 --gid 1000 student && \
     mkdir /home/student
 VOLUME /home/student/studentData
 
@@ -43,11 +40,20 @@ RUN mv apache* /home/student/tomcat
 RUN rm tomcatSetup.zip
 RUN chmod +x /home/student/tomcat/bin/catalina.sh
 
-RUN chown -R app:app /home/student/ /dev/stdout
+RUN chown -R student:student /home/student/ /dev/stdout
+
+# Google chrome
+RUN wget -O google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+RUN apt update && apt install -y libgbm1
+RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+RUN rm google-chrome-stable_current_amd64.deb
+
+RUN echo -n "student\nstudent" | passwd student
+RUN usermod -aG sudo student
 
 COPY --from=easy-novnc-build /bin/easy-novnc /usr/local/bin/
 COPY menu.xml /var/lib/openbox/debian-menu.xml
 COPY supervisord.conf /etc/
 EXPOSE 6000
 
-CMD ["sh", "-c", "chown app:app /home/student/studentData /dev/stdout && exec gosu app supervisord"]
+CMD ["sh", "-c", "chown student:student /home/student/studentData /dev/stdout && exec gosu student supervisord"]
