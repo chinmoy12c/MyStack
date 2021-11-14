@@ -74,7 +74,7 @@ exports.runContainer = async (req, res, containerName) => {
                 }
                 dbHandler.recordInstance(req, res, userData, caddyName, containerTag, containerName, port);
                 console.log(caddyName);
-                res.redirect(`http://${req.get('host').split(':')[0]}:${port}`);
+                res.redirect('back');
             });
         });
     });
