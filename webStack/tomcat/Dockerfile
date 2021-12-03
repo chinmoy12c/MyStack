@@ -51,6 +51,8 @@ RUN rm google-chrome-stable_current_amd64.deb
 RUN echo -n "student\nstudent" | passwd student
 RUN usermod -aG sudo student
 
+RUN apt-get install -y tint2
+
 COPY --from=easy-novnc-build /bin/easy-novnc /usr/local/bin/
 COPY menu.xml /var/lib/openbox/debian-menu.xml
 COPY supervisord.conf /etc/

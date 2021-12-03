@@ -73,6 +73,8 @@ RUN chown -R student:student /home/student/ /dev/stdout
 RUN echo -n "student\nstudent" | passwd student
 RUN usermod -aG sudo student
 
+RUN apt-get install -y tint2
+
 COPY --from=easy-novnc-build /bin/easy-novnc /usr/local/bin/
 COPY menu.xml /var/lib/openbox/debian-menu.xml
 COPY supervisord.conf /etc/
