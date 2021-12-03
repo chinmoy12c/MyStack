@@ -42,6 +42,11 @@ app.post('/registerUser', auth.checkAdmin, (req, res) => {
    authUtil.registerUser(req, res);
 });
 
+app.get('/logout', (req, res) => {
+   res.clearCookie('accessToken');
+   res.redirect('/');
+});
+
 app.get('/launchStack', auth.checkAuth, auth.confirmToken, (req, res) => {
    const stack = req.query.stack;
    const containerName = instanceHandler.resolveContainer(stack);

@@ -48,10 +48,17 @@ RUN apt update && apt install -y libgbm1
 RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
 RUN rm google-chrome-stable_current_amd64.deb
 
+#Git
+RUN apt-get -y update && \
+    apt-get install -y git && \
+    rm -rf /var/lib/apt/lists
+
 RUN echo -n "student\nstudent" | passwd student
 RUN usermod -aG sudo student
 
-RUN apt-get install -y tint2
+RUN apt-get -y update && \
+    apt-get install -y tint2 && \
+    rm -rf /var/lib/apt/lists
 
 COPY --from=easy-novnc-build /bin/easy-novnc /usr/local/bin/
 COPY menu.xml /var/lib/openbox/debian-menu.xml

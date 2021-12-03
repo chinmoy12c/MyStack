@@ -47,7 +47,7 @@ exports.runContainer = async (req, res, containerName) => {
     process.exec(cmd,
     (err, stdout, stderr) => {
         if (err || stderr) {
-            res.render('errorPage', {'errorMessage': 'Failed to launch instance! Please try again.'});
+            res.render('errorPage', {'errorMessage': 'Failed to get a free port! Please try again.'});
             return;
         }
         const port = stdout.trim();
