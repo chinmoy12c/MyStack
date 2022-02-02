@@ -1,1 +1,0 @@
-docker run --detach --restart=always --volume=test-data2:/data --net=test-network --name=test-app1 teststack
